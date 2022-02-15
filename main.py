@@ -36,6 +36,58 @@ def dataset_exists(dataset_id):
         print(f"Dataset {dataset_id} is not found so creating it.")
         return False
 
+def create_dataset(
+    VIEW_PROJECT,
+    VIEW_DATASET, 
+    BILLING_PROJECT, 
+    BILLING_DATASET, 
+    CARBON_PROJECT, 
+    CARBON_DATASET
+):
+    if not dataset_exists(f"{BILLING_PROJECT}.{BILLING_DATASET}"):
+        raise NotFound(f"Dataset {BILLING_PROJECT}.{BILLING_DATASET} is not found, please make sure it exists.")
+
+    if not dataset_exists(f"{CARBON_PROJECT}.{CARBON_DATASET}"):
+        raise NotFound(f"Dataset {CARBON_PROJECT}.{CARBON_DATASET} is not found, please make sure it exists.")
+    
+    view_dataset_info = bq_client.get_dataset(
+        f"{VIEW_PROJECT}.{VIEW_DATASET}"
+    )
+    billing_dataset_info = bq_client.get_dataset(
+        f"{BILLING_PROJECT}.{BILLING_DATASET}"
+    )
+
+    if dataset_exists(f"{VIEW_PROJECT}.{VIEW_DATASET}"):
+        # If the final dataset already exists, check that all datasets are in the same location
+        carbon_dataset_info = bq_client.get_dataset(
+            f"{CARBON_PROJECT}.{CARBON_DATASET}"
+        )
+        
+        if not (view_dataset_info.location == billing_dataset_info.location == carbon_dataset_info.location):
+            raise ValueError("All datasets need to be in the same location.")
+
+        return
+    else:
+        if not (billing_dataset_info.location == carbon_dataset_info.location):
+            raise ValueError("Billing and carbon datasets need to be in the same location to create the final view.")
+        
+        dataset = bigquery.Dataset(
+            f"{VIEW_PROJECT}.{VIEW_DATASET}"
+        )
+        dataset.location = carbon_dataset_info.location
+        print(
+            f"Final view will be created in {carbon_dataset_info.location}."
+        )
+
+        dataset = bq_client.create_dataset(dataset, timeout=30)
+
+        print(
+            f"Created dataset {VIEW_PROJECT}.{VIEW_DATASET}"
+        )
+
+def create_final_view():
+    return 
+
 def main(argv):
     parser=argparse.ArgumentParser(
         description="Billing and carbon export information"
@@ -102,3 +154,13 @@ def main(argv):
         type=str, 
         help="Table id of final view"
     )
+
+    parser.add_argument(
+        "-c",
+        dest ="CURRENCY", 
+        type=str, 
+        help="Currency in the billing data"
+    )
+
+
+print(create_dataset(project_id, dataset_id, project_id, dataset_id, project_id, dataset_id))
