@@ -6,6 +6,7 @@ import argparse, sys
 
 ### INPUT 
 dashboard_id_path = "dashboard_id.txt"
+query_path = "view_template.sql"
 new_dashboard_name = "my_little_test"
 alias_connection = "ds69"
 project_id = "benjaminsadik-carbonfootprint"
@@ -43,7 +44,7 @@ def create_dataset(
     BILLING_DATASET, 
     CARBON_PROJECT, 
     CARBON_DATASET
-):
+    ):
     if not dataset_exists(f"{BILLING_PROJECT}.{BILLING_DATASET}"):
         raise NotFound(f"Dataset {BILLING_PROJECT}.{BILLING_DATASET} is not found, please make sure it exists.")
 
@@ -82,10 +83,28 @@ def create_dataset(
         dataset = bq_client.create_dataset(dataset, timeout=30)
 
         print(
-            f"Created dataset {VIEW_PROJECT}.{VIEW_DATASET}"
+            f"Created dataset {VIEW_PROJECT}.{VIEW_DATASET}."
         )
 
-def create_final_view():
+def create_final_view(VIEW_PROJECT,
+    VIEW_DATASET, 
+    VIEW_NAME, 
+    BILLING_PROJECT, 
+    BILLING_DATASET, 
+    CARBON_PROJECT, 
+    CARBON_DATASET):
+
+    query = open(
+        query_path,
+        "r"
+        ).read()
+    
+    query.replace()
+
+
+    
+
+
     return 
 
 def main(argv):
