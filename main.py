@@ -3,20 +3,15 @@ from google.cloud.exceptions import NotFound
 import argparse, sys
 import json
 
-
-
-### INPUT 
-dashboard_config_path = "dashboard_config.json"
+### PATH
+dashboard_config_path = "dashboard_template_config.json"
 query_path = "view_template.sql"
-project_id = "benjaminsadik-carbonfootprint"
-dataset_id = "carbonfootprintUSA" 
-table_id ="carbon_billing_export_USD_view"
 
 bq_client = bigquery.Client()
 
 def dataset_exists(dataset_id):
     try:
-        bq_client.get_dataset(dataset_id)  # Make an API request.
+        bq_client.get_dataset(dataset_id) 
         print(f"Dataset {dataset_id} already exists so skipping creation.")
         return True
     except NotFound:
@@ -184,7 +179,7 @@ def pipeline(
         VIEW_PROJECT, 
         VIEW_DATASET, 
         VIEW_NAME, 
-        BILLING_DATASET, 
+        BILLING_PROJECT, 
         BILLING_DATASET, 
         BILLING_TABLE, 
         CARBON_PROJECT, 
@@ -193,13 +188,18 @@ def pipeline(
         CURRENCY
     )
 
-    generate_datastudio_url(
+    url = generate_datastudio_url(
         dashboard_id, 
         alias_connection, 
         VIEW_PROJECT, 
         VIEW_DATASET, 
         VIEW_NAME
     )
+
+    print(
+        f"\nYour dashboard has been created, click the following link and share it:\n\n{url}\n"
+    )
+    return url
 
 
 
@@ -214,58 +214,58 @@ def main(argv):
         help="Configuration file"
     )
     parser.add_argument(
-        "-pc",
+        "-cp",
         dest="CARBON_PROJECT", 
         type=str, 
         help="Project id of carbon export"
     )
     parser.add_argument(
-        "-dc",
+        "-cd",
         dest="CARBON_DATASET", 
         type=str, 
         help="Dataset id of carbon export"
     )
     parser.add_argument(
-        "-tc",
+        "-ct",
         dest="CARBON_TABLE", 
         type=str, 
         help="Table id of carbon export"
     )
     parser.add_argument(
-        "-pb",
+        "-bp",
         dest="BILLING_PROJECT", 
         type=str, 
         help="Project id of billing export"
     )
     parser.add_argument(
-        "-db",
+        "-bd",
         dest="BILLING_DATASET", 
         type=str, 
         help="Dataset id of billing export"
     )
     parser.add_argument(
-        "-tb",
+        "-bt",
         dest="BILLING_TABLE", 
         type=str, 
         help="Table id of billing export"
     )
 
     parser.add_argument(
-        "-pv",
+        "-vp",
         dest="VIEW_PROJECT", 
         type=str, 
         help="Project id of final view"
     )
     parser.add_argument(
-        "-dv",
+        "-vd",
         dest="VIEW_DATASET", 
         type=str, 
         help="Dataset id of final view"
     )
 
     parser.add_argument(
-        "-tv",
-        dest="VIEW_TABLE", 
+        "-vn",
+        dest="VIEW_NAME", 
         type=str, 
         help="Table id of final view"
     )
@@ -281,7 +281,6 @@ def main(argv):
 
     # Import dashboard config metadatas
 
-
     json_file = open(
         dashboard_config_path
     )
@@ -290,15 +289,33 @@ def main(argv):
     )
     json_file.close()
 
-
-
     # If a file is given
     
     if args.CONFIG_FILE is not None:
-        config = open(
-            argv.CONFIG_FILE,
-            "r"
-        ).read()
+
+        json_file = open(
+            args.CONFIG_FILE
+        )
+        config = json.load(
+            json_file
+        )
+        json_file.close()
+
+        pipeline(
+            config["VIEW_PROJECT"],
+            config["VIEW_DATASET"], 
+            config["VIEW_NAME"], 
+            config["BILLING_PROJECT"],
+            config["BILLING_DATASET"], 
+            config["BILLING_TABLE"], 
+            config["CARBON_PROJECT"], 
+            config["CARBON_DATASET"], 
+            config["CARBON_TABLE"],
+            config["CURRENCY"], 
+            dashboard_config["dashboard_id"], 
+            dashboard_config["alias_connection"]
+        )
+
     else:
         pipeline(
             args.VIEW_PROJECT,
@@ -311,10 +328,9 @@ def main(argv):
             args.CARBON_DATASET, 
             args.CARBON_TABLE,
             args.CURRENCY, 
-            dashboard_config.dashboard_id, 
-            dashboard_config.alias_connection
+            dashboard_config["dashboard_id"], 
+            dashboard_config["alias_connection"]
         )
-        
 
-# if __name__ == "__main__":
-#    main(sys.argv[:1])
+if __name__ == "__main__":
+   main(sys.argv[:1])
