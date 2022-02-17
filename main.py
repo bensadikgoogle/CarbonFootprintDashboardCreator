@@ -18,8 +18,8 @@ dashboard_id = open(
     dashboard_id_path,
     "r"
 ).read()
-view_url = f"&ds.{alias_connection}.connector=bigQuery&ds.{alias_connection}.projectId={project_id}&ds.{alias_connection}.type=TABLE&ds.{alias_connection}.datasetId={dataset_id}&ds.{alias_connection}.tableId={table_id}"
 base_url=f"https://datastudio.google.com/reporting/create?c.reportId={dashboard_id}&r.reportName={new_dashboard_name}"
+parameters_url = f"&ds.{alias_connection}.connector=bigQuery&ds.{alias_connection}.projectId={project_id}&ds.{alias_connection}.type=TABLE&ds.{alias_connection}.datasetId={dataset_id}&ds.{alias_connection}.tableId={table_id}"
 
 dashboard_id = open(
     dashboard_id_path,
@@ -91,21 +91,76 @@ def create_final_view(VIEW_PROJECT,
     VIEW_NAME, 
     BILLING_PROJECT, 
     BILLING_DATASET, 
+    BILLING_TABLE,
     CARBON_PROJECT, 
-    CARBON_DATASET):
+    CARBON_DATASET,
+    CARBON_TABLE,
+    CURRENCY):
 
     query = open(
         query_path,
         "r"
         ).read()
-    
-    query.replace()
 
+    # Replacing view fields
+    query = query.replace(
+        "$VIEW_PROJECT_ID", 
+        VIEW_PROJECT
+    ).replace(
+        "$VIEW_DATASET", 
+        VIEW_DATASET
+    ).replace(
+        "$VIEW_NAME", 
+        VIEW_NAME
+    )
 
-    
+    # Replacing billing tabke fields
+    query = query.replace(
+        "$BILLING_PROJECT_ID", 
+        BILLING_PROJECT
+    ).replace(
+        "$BILLING_DATASET", 
+        BILLING_DATASET
+    ).replace(
+        "$BILLING_TABLE", 
+        BILLING_TABLE
+    )
 
+    # Replacing carbon table fields
+    query = query.replace(
+        "$CARBON_PROJECT_ID", 
+        CARBON_PROJECT
+    ).replace(
+        "$CARBON_DATASET", 
+        CARBON_DATASET
+    ).replace(
+        "$CARBON_TABLE", 
+        CARBON_TABLE
+    )
 
-    return 
+    # Replacing the currency field 
+    query = query.replace(
+        "$CURRENCY", 
+        CURRENCY
+    )
+
+    bq_view_client = bigquery.Client(
+        project = VIEW_PROJECT
+    )
+
+    job = bq_view_client.query(
+        query
+    )
+    job.result()
+
+    print(
+        f"Created view {VIEW_PROJECT}.{VIEW_DATASET}.{VIEW_NAME}."
+    )
+
+def generate_datastudio_url(
+
+    ):
+    return
 
 def main(argv):
     parser=argparse.ArgumentParser(
@@ -182,4 +237,17 @@ def main(argv):
     )
 
 
-print(create_dataset(project_id, dataset_id, project_id, dataset_id, project_id, dataset_id))
+# print(create_dataset(project_id, dataset_id, project_id, dataset_id, project_id, dataset_id))
+
+#create_final_view(
+  #  project_id, 
+   # dataset_id, 
+ #   "name", 
+ #   project_id, 
+ #   dataset_id,
+  #  "billing_export", 
+ #   project_id, 
+  #  dataset_id, 
+  #  "carbon_footprint_export", 
+   # "USD"
+#)
