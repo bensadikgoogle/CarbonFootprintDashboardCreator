@@ -1,3 +1,5 @@
+CREATE OR REPLACE VIEW
+  $VIEW_PROJECT_ID.$VIEW_DATASET.$VIEW_NAME AS
 SELECT
   billing.billing_account_id,
   STRUCT(billing.service_id AS id,
