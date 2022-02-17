@@ -1,30 +1,16 @@
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 import argparse, sys
+import json
 
 
 
 ### INPUT 
-dashboard_id_path = "dashboard_id.txt"
+dashboard_config_path = "dashboard_config.json"
 query_path = "view_template.sql"
-new_dashboard_name = "my_little_test"
-alias_connection = "ds69"
 project_id = "benjaminsadik-carbonfootprint"
 dataset_id = "carbonfootprintUSA" 
 table_id ="carbon_billing_export_USD_view"
-
-## DEDUCE 
-dashboard_id = open(
-    dashboard_id_path,
-    "r"
-).read()
-base_url=f"https://datastudio.google.com/reporting/create?c.reportId={dashboard_id}&r.reportName={new_dashboard_name}"
-parameters_url = f"&ds.{alias_connection}.connector=bigQuery&ds.{alias_connection}.projectId={project_id}&ds.{alias_connection}.type=TABLE&ds.{alias_connection}.datasetId={dataset_id}&ds.{alias_connection}.tableId={table_id}"
-
-dashboard_id = open(
-    dashboard_id_path,
-    "r"
-).read()
 
 bq_client = bigquery.Client()
 
@@ -168,7 +154,54 @@ def generate_datastudio_url(
 
     base_url=f"https://datastudio.google.com/reporting/create?c.reportId={dashboard_id}&r.reportName={new_dashboard_name}"
     parameters_url = f"&ds.{alias_connection}.connector=bigQuery&ds.{alias_connection}.projectId={project_id}&ds.{alias_connection}.type=TABLE&ds.{alias_connection}.datasetId={dataset_id}&ds.{alias_connection}.tableId={table_id}"
+    
     return base_url+parameters_url
+
+def pipeline(
+    VIEW_PROJECT,
+    VIEW_DATASET, 
+    VIEW_NAME,
+    BILLING_PROJECT, 
+    BILLING_DATASET, 
+    BILLING_TABLE,
+    CARBON_PROJECT, 
+    CARBON_DATASET,
+    CARBON_TABLE, 
+    CURRENCY, 
+    dashboard_id, 
+    alias_connection):
+    
+    create_dataset(
+        VIEW_PROJECT, 
+        VIEW_DATASET, 
+        BILLING_PROJECT, 
+        BILLING_DATASET, 
+        CARBON_PROJECT, 
+        CARBON_DATASET
+    )
+    
+    create_final_view(
+        VIEW_PROJECT, 
+        VIEW_DATASET, 
+        VIEW_NAME, 
+        BILLING_DATASET, 
+        BILLING_DATASET, 
+        BILLING_TABLE, 
+        CARBON_PROJECT, 
+        CARBON_DATASET, 
+        CARBON_TABLE, 
+        CURRENCY
+    )
+
+    generate_datastudio_url(
+        dashboard_id, 
+        alias_connection, 
+        VIEW_PROJECT, 
+        VIEW_DATASET, 
+        VIEW_NAME
+    )
+
+
 
 def main(argv):
     parser=argparse.ArgumentParser(
@@ -244,28 +277,44 @@ def main(argv):
         help="Currency in the billing data"
     )
 
+    args = parser.parse_args()
 
-# print(create_dataset(project_id, dataset_id, project_id, dataset_id, project_id, dataset_id))
+    # Import dashboard config metadatas
 
-#create_final_view(
-  #  project_id, 
-   # dataset_id, 
- #   "name", 
- #   project_id, 
- #   dataset_id,
-  #  "billing_export", 
- #   project_id, 
-  #  dataset_id, 
-  #  "carbon_footprint_export", 
-   # "USD"
-#)
 
-print(
-    generate_datastudio_url(
-        dashboard_id, 
-        alias_connection, 
-        project_id, 
-        dataset_id, 
-        "test"
+    json_file = open(
+        dashboard_config_path
     )
-)
+    dashboard_config = json.load(
+        json_file
+    )
+    json_file.close()
+
+
+
+    # If a file is given
+    
+    if args.CONFIG_FILE is not None:
+        config = open(
+            argv.CONFIG_FILE,
+            "r"
+        ).read()
+    else:
+        pipeline(
+            args.VIEW_PROJECT,
+            args.VIEW_DATASET, 
+            args.VIEW_NAME, 
+            args.BILLING_PROJECT,
+            args.BILLING_DATASET, 
+            args.BILLING_TABLE, 
+            args.CARBON_PROJECT, 
+            args.CARBON_DATASET, 
+            args.CARBON_TABLE,
+            args.CURRENCY, 
+            dashboard_config.dashboard_id, 
+            dashboard_config.alias_connection
+        )
+        
+
+# if __name__ == "__main__":
+#    main(sys.argv[:1])
