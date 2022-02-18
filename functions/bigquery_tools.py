@@ -2,6 +2,7 @@ from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 import os
 
+# Import template of the query to generate the custom view
 current_wd = os.getcwd()
 query_path = os.path.join(
     current_wd, 
@@ -12,6 +13,9 @@ def dataset_exists(
     bq_client, 
     dataset_id
     ):
+    """
+    Check dataset existence for the following id structure: {project_id}.{dataset_id}.
+    """
     try:
         bq_client.get_dataset(dataset_id) 
         print(
@@ -33,6 +37,11 @@ def create_dataset(
     CARBON_PROJECT, 
     CARBON_DATASET
     ):
+
+    """
+    Worklow to check and eventually create required datasets
+    """
+
     if not dataset_exists(
         bq_client,
         f"{BILLING_PROJECT}.{BILLING_DATASET}"
@@ -93,6 +102,12 @@ def create_final_view(
     CARBON_DATASET,
     CARBON_TABLE,
     CURRENCY):
+
+    """
+    Function that:
+    1. Forges custom query based on user's input
+    2. Use the custom query to create a view in BigQuery using the input name
+    """
 
     query = open(
         query_path,

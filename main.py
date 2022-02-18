@@ -5,7 +5,7 @@ import json
 import os 
 from functions import dataset_exists, create_dataset, create_final_view, generate_datastudio_url
 
-### PATH
+# Import metadata about the dashboard: connection_alias, dashboard_id
 current_wd = os.getcwd()
 dashboard_config_path = os.path.join(
     current_wd, 
@@ -28,6 +28,13 @@ def pipeline(
     CURRENCY, 
     dashboard_id, 
     alias_connection):
+
+    """
+    Function encapsulating the complete workflow:
+    1. Check datasets existence
+    2. Create view joining billing and carbon export data
+    3. Forge dashboard url 
+    """
     
     create_dataset(
         bq_client,
