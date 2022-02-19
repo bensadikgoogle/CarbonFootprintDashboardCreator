@@ -1,14 +1,49 @@
-# billboard
+# Advanced Carbon Footprint Dashboard
 
+If you are part of a Carbon/Green Ops team in charge with monitoring carbon emissions in GCP, this dashboard will empower you by allowing you to dive in your carbon data easily in Data Studio.
 
+## Prerequisites
 
-If you are cost conscious and need to control your environment, then you can use this to understand your billing 
+This dashboard assumes that the user has already configured exports to BigQuery for the billing data and carbon footprint data and has access to this table.
 
+**Note that this is required for the BigQuery datasets to be in the same GCP global region for this script to work.**
+
+Follow these links to configure the exports:
+* [Carbon footprint export to BigQuery](https://cloud.google.com/carbon-footprint/docs/export)
+* [Billing account data export to BigQuery](https://cloud.google.com/billing/docs/how-to/export-data-bigquery#setup)
 
 ## Run the walkthrough tutorial
 
+### 1. Click on the following button
+This will open an ephemeral Cloud Shell window with your credentials and this repository already cloned in the environment. 
+
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/bensadikgoogle/CarbonFootprintDashboardCreator.git)
 
+### 2. Install required Python packages
 `
-pip: -r requirements.txt
+pip -r requirements.txt
 `
+
+### Run the script
+
+#### Using a configuration file
+
+`
+config.json
+`
+```javascript
+{
+    "VIEW_PROJECT" : "", 
+    "VIEW_DATASET" : "", 
+    "VIEW_NAME" : "", 
+    "BILLING_PROJECT" : "",
+    "BILLING_DATASET" : "",
+    "BILLING_TABLE" : "",
+    "CARBON_PROJECT" : "",
+    "CARBON_DATASET" : "",
+    "CARBON_TABLE" : "",
+    "CURRENCY": "" 
+}
+```
+
+#### Without using a configuration file
