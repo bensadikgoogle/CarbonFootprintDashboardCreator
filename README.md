@@ -65,9 +65,9 @@ config.json
 
 Run the following command in the Cloud Shell environment : 
 
-`
+```
 python3 main.py -cp CARBON_PROJECT -cd CARBON_DATASET -ct CARBON_TABLE -bp BILLING_PROJECT -bd BILLING_DATASET -bt BILLING_TABLE -vp VIEW_PROJECT -vd VIEW_DATASET -vn VIEW_NAME -c CURRENCY
-`
+```
 
 **Explanation of each field:**
 
