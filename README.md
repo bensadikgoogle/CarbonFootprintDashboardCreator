@@ -19,18 +19,12 @@ This will open an ephemeral Cloud Shell window with your credentials and this re
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/bensadikgoogle/CarbonFootprintDashboardCreator.git)
 
-### 2. Navigate to the folder 
-
-`
-cd 
-`
-
-### 3. Install required Python packages
+### 2. Install required Python packages
 `
 pip3 -r requirements.txt
 `
 
-### 4. Run the script
+### 3. Run the script
 
 There are two different options to create the BigQuery View and Data Studio URL.
 
@@ -72,7 +66,7 @@ python3 main.py -cp CARBON_PROJECT -cd CARBON_DATASET -ct CARBON_TABLE -bp BILLI
 Explanation of each field:
 **
 Field | Description
---- | --- | ---
+--- | ---
 CARBON_PROJECT  | Project id of carbon export
 CARBON_DATASET | Dataset id of carbon export
 CARBON_TABLE | Table id of carbon export
@@ -81,5 +75,7 @@ BILLING_DATASET | Dataset id of billing export
 BILLING_TABLE  | Table id of billing export
 VIEW_PROJECT  | Project id of final view
 VIEW_DATASET  | Dataset id of final view
-* VIEW_NAME        Table id of final view
-* CURRENCY          Currency in the billing data
+VIEW_NAME  | Table id of final view
+CURRENCY | Currency in the billing data
+
+### 3. Click on the link and share the dashboard with your team
