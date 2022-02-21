@@ -19,15 +19,29 @@ This will open an ephemeral Cloud Shell window with your credentials and this re
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/bensadikgoogle/CarbonFootprintDashboardCreator.git)
 
-### 2. Install required Python packages
+### 2. Navigate to the folder 
+
 `
-pip -r requirements.txt
+cd 
 `
 
-### Run the script
+### 3. Install required Python packages
+`
+pip3 -r requirements.txt
+`
 
-#### Using a configuration file
+### 4. Run the script
 
+There are two different options to create the BigQuery View and Data Studio URL.
+
+#### Using a configuration file 
+
+Run the following command in the Cloud Shell environment
+
+`
+python3 main.py -f config.json
+`
+Configuration file structure:
 `
 config.json
 `
@@ -47,3 +61,25 @@ config.json
 ```
 
 #### Without using a configuration file
+
+Run the following command in the Cloud Shell environment : 
+
+`
+python3 main.py -cp CARBON_PROJECT -cd CARBON_DATASET -ct CARBON_TABLE -bp BILLING_PROJECT -bd BILLING_DATASET -bt BILLING_TABLE -vp VIEW_PROJECT -vd VIEW_DATASET -vn VIEW_NAME -c CURRENCY
+`
+
+**
+Explanation of each field:
+**
+Field | Description
+--- | --- | ---
+CARBON_PROJECT  | Project id of carbon export
+CARBON_DATASET | Dataset id of carbon export
+CARBON_TABLE | Table id of carbon export
+BILLING_PROJECT | Project id of billing export
+BILLING_DATASET | Dataset id of billing export
+BILLING_TABLE  | Table id of billing export
+VIEW_PROJECT  | Project id of final view
+VIEW_DATASET  | Dataset id of final view
+* VIEW_NAME        Table id of final view
+* CURRENCY          Currency in the billing data
