@@ -137,7 +137,7 @@ def main(argv):
         "-vn",
         dest="VIEW_NAME", 
         type=str, 
-        help="Table id of final view"
+        help="Name of the final view"
     )
 
     parser.add_argument(
