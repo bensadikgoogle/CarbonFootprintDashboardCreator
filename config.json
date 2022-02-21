@@ -1,0 +1,12 @@
+{
+    "VIEW_PROJECT" : "", 
+    "VIEW_DATASET" : "", 
+    "VIEW_NAME" : "", 
+    "BILLING_PROJECT" : "",
+    "BILLING_DATASET" : "",
+    "BILLING_TABLE" : "",
+    "CARBON_PROJECT" : "",
+    "CARBON_DATASET" : "",
+    "CARBON_TABLE" : "",
+    "CURRENCY": "" 
+}
