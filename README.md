@@ -75,7 +75,7 @@ BILLING_DATASET | Dataset id of billing export
 BILLING_TABLE  | Table id of billing export
 VIEW_PROJECT  | Project id of final view
 VIEW_DATASET  | Dataset id of final view
-VIEW_NAME  | Table id of final view
+VIEW_NAME  | Name of final view
 CURRENCY | Currency in the billing data
 
 ### 3. Click on the link and share the dashboard with your team
