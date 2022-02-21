@@ -35,7 +35,9 @@ Run the following command in the Cloud Shell environment
 `
 python3 main.py -f config.json
 `
+
 Configuration file structure:
+
 `
 config.json
 `
@@ -65,6 +67,7 @@ python3 main.py -cp CARBON_PROJECT -cd CARBON_DATASET -ct CARBON_TABLE -bp BILLI
 **
 Explanation of each field:
 **
+
 Field | Description
 --- | ---
 CARBON_PROJECT  | Project id of carbon export
