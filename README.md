@@ -17,6 +17,8 @@ Follow these links to configure the exports:
 ### 1. Click on the following button
 This will open an ephemeral Cloud Shell window with your credentials and this repository already cloned in the environment. 
 
+**Make sure to trust the repository so that the code can execute properly.**
+
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/bensadikgoogle/CarbonFootprintDashboardCreator.git)
 
 ### 2. Install required Python packages
