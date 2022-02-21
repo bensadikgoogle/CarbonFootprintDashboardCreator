@@ -21,7 +21,7 @@ This will open an ephemeral Cloud Shell window with your credentials and this re
 
 ### 2. Install required Python packages
 `
-pip3 -r requirements.txt
+pip3 install -r requirements.txt
 `
 
 ### 3. Run the script
