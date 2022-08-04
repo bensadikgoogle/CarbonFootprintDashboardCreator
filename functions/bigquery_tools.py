@@ -11,7 +11,7 @@ query_path = os.path.join(
 
 def dataset_exists(
     bq_client, 
-    dataset_id
+    dataset_id 
     ):
     """
     Check dataset existence for the following id structure: {project_id}.{dataset_id}.
@@ -54,11 +54,13 @@ def create_dataset(
     ):
         raise NotFound(f"Dataset {CARBON_PROJECT}.{CARBON_DATASET} is not found, please make sure it exists.")
     
-    view_dataset_info = bq_client.get_dataset(
-        f"{VIEW_PROJECT}.{VIEW_DATASET}"
-    )
+    # Retrieving Billing and Carbon dataset
     billing_dataset_info = bq_client.get_dataset(
         f"{BILLING_PROJECT}.{BILLING_DATASET}"
+    )
+
+    carbon_dataset_info = bq_client.get_dataset(
+            f"{CARBON_PROJECT}.{CARBON_DATASET}"
     )
 
     if dataset_exists(
@@ -66,8 +68,8 @@ def create_dataset(
         f"{VIEW_PROJECT}.{VIEW_DATASET}"
     ):
         # If the final dataset already exists, check that all datasets are in the same location
-        carbon_dataset_info = bq_client.get_dataset(
-            f"{CARBON_PROJECT}.{CARBON_DATASET}"
+        view_dataset_info = bq_client.get_dataset(
+            f"{VIEW_PROJECT}.{VIEW_DATASET}"
         )
         
         if not (view_dataset_info.location == billing_dataset_info.location == carbon_dataset_info.location):
@@ -76,6 +78,7 @@ def create_dataset(
         if not (billing_dataset_info.location == carbon_dataset_info.location):
             raise ValueError("Billing and carbon datasets need to be in the same location to create the final view.")
         
+        # Create the View dataset object if it does not already exist
         dataset = bigquery.Dataset(
             f"{VIEW_PROJECT}.{VIEW_DATASET}"
         )
