@@ -17,7 +17,7 @@ SELECT
   carbon.carbon_footprint_kgCO2e_scope1,
   carbon.carbon_footprint_kgCO2e_scope2,
   carbon.carbon_footprint_kgCO2e_scope3,
-  carbon.Total_carbon_footprint_kgCO2e,
+  carbon.carbon_footprint_kgCO2e,
   label_asset.labels,
   billing_usage.monthly_usage_volume
 FROM (
@@ -71,7 +71,7 @@ INNER JOIN (
     ROUND(carbon_footprint_kgCO2e.scope1, 3) AS carbon_footprint_kgCO2e_scope1,
     ROUND(carbon_footprint_kgCO2e.scope2.location_based, 3) AS carbon_footprint_kgCO2e_scope2,
     ROUND(carbon_footprint_kgCO2e.scope3, 3) AS carbon_footprint_kgCO2e_scope3,
-    ROUND(carbon_footprint_total_kgCO2e.location_based, 3) AS Total_carbon_footprint_kgCO2e,
+    ROUND(carbon_footprint_total_kgCO2e.location_based, 3) AS carbon_footprint_kgCO2e,
   FROM
     `$CARBON_PROJECT_ID.$CARBON_DATASET.$CARBON_TABLE` ) carbon
 ON
