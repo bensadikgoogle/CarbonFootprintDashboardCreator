@@ -85,3 +85,10 @@ VIEW_NAME  | Name of final view
 CURRENCY | Currency in the billing data
 
 ### 3. Click on the link and share the dashboard with your team
+
+## Changelog
+
+* May 2023: update dependencies, improve dashboard (add carbon footprint scope split)
+* Dev 2022: Update view to new Carbon footprint data schema
+
+
